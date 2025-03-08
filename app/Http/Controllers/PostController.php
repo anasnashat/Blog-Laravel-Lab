@@ -37,7 +37,7 @@ class PostController extends Controller
         $post['description'] = $request->description;
         $post['posted_by'] = $request->posted_by;
         var_dump($post);
-        return view('posts.index');
+        return to_route('posts.index');
     }
 
     /**
@@ -45,15 +45,26 @@ class PostController extends Controller
      */
     public function show(string $post)
     {
-        $post = ['id' => 1, 'title' => 'laravel', 'posted_by' => 'ahmed', 'created_at' => '2025-03-08 12:47:00'];
-        return view('posts.show', compact('post'));
+        $post = [
+            'id' => 1,
+            'title' => 'laravel',
+            'description' => 'some description',
+            'posted_by' => [
+                'name' => 'ahmed',
+                'email' => 'test@gmail.com',
+                'created_at' => 'Thursday 25th of December 1975 02:15:16 PM'
+            ],
+            'created_at' => '2025-03-08 12:47:00',
+        ];        return view('posts.show', compact('post'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $post)
+    public function edit(string $id)
     {
+        $post = ['id' => 1, 'description'=>'this is des', 'title' => 'laravel', 'posted_by' => 'ahmed', 'created_at' => '2025-03-08 12:47:00'];
+//        dd($post);
         return view('posts.edit', compact('post'));
     }
 
@@ -67,7 +78,7 @@ class PostController extends Controller
         $post['description'] = $request->description;
         $post['posted_by'] = $request->posted_by;
         var_dump($post);
-        return view('posts.index');
+        return to_route('posts.index');
     }
 
     /**
