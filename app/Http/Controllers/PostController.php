@@ -24,7 +24,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('posts.create');
     }
 
     /**
@@ -32,31 +32,42 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $post = [];
+        $post['title'] = $request->title;
+        $post['description'] = $request->description;
+        $post['posted_by'] = $request->posted_by;
+        var_dump($post);
+        return view('posts.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(string $post)
     {
-        //
+        $post = ['id' => 1, 'title' => 'laravel', 'posted_by' => 'ahmed', 'created_at' => '2025-03-08 12:47:00'];
+        return view('posts.show', compact('post'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Post $post)
+    public function edit(string $post)
     {
-        //
+        return view('posts.edit', compact('post'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, string $post)
     {
-        //
+        $post = [];
+        $post['title'] = $request->title;
+        $post['description'] = $request->description;
+        $post['posted_by'] = $request->posted_by;
+        var_dump($post);
+        return view('posts.index');
     }
 
     /**
