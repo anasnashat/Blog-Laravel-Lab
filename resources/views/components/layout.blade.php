@@ -18,7 +18,12 @@
                     <a class="text-lg font-semibold text-gray-900" href="{{ route('posts.index') }}">ITI Blog Post</a>
                 </div>
                 <div class="ml-6 flex items-center space-x-4">
-                    <a class="px-3 py-2 text-sm font-medium text-gray-900 border-b-2 border-blue-500" href="{{ route('posts.index') }}">All Posts</a>
+                    <a class="px-3 py-2 text-sm font-medium {{ request()->routeIs('posts.index') ? 'text-gray-900 border-b-2 border-blue-500' : '' }}" href="{{ route('posts.index') }}">All Posts</a>                </div>
+                <div class="ml-6 flex items-center space-x-4">
+                    <a class="px-3 py-2 text-sm font-medium {{ request()->routeIs('posts.myPosts') ? 'text-gray-900 border-b-2 border-blue-500' : '' }}" href="{{ route('posts.myPosts') }}">My Posts</a>                </div>
+                </div>
+                <div class="ml-6 flex items-center space-x-4">
+                    <a class="px-3 py-2 text-sm font-medium {{ request()->routeIs('posts.dashboard') ? 'text-gray-900 border-b-2 border-blue-500' : '' }}" href="{{ route('dashboard') }}">Dashboard</a>                </div>
                 </div>
             </div>
             <div class="flex items-center">
