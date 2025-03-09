@@ -28,13 +28,24 @@
                         <td class="px-4 py-2 whitespace-nowrap text-gray-700 space-x-2">
                             <a href="{{ route('posts.show', $post) }}" class="inline-block px-4 py-1 text-xs font-medium text-white bg-blue-400 rounded hover:bg-blue-500">View</a>
                             @if(auth()->id() == $post->user->id)
-                            <a href="{{ route("posts.edit", $post['id']) }}" class="inline-block px-4 py-1 text-xs font-medium text-white bg-blue-600 rounded hover:bg-blue-700">Edit</a>
-                            <form action="{{ route('posts.destroy', $post) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure to delete post {{$post->name}}?')">
-                                @csrf
-                                @method("DELETE")
-                                <button type="submit" class="inline-block px-4 py-1 text-xs font-medium text-white bg-red-600 rounded hover:bg-red-700">Delete</button>
-{{--                            <a href="{{ route('posts.destroy', $post) }}" class="inline-block px-4 py-1 text-xs font-medium text-white bg-red-600 rounded hover:bg-red-700">Delete</a>--}}
-                            </form>
+
+                                <a href="{{ route("posts.edit", $post['id']) }}" class="inline-block px-4 py-1 text-xs font-medium text-white bg-blue-600 rounded hover:bg-blue-700">Edit</a>
+                            @if($post->deleted_at)
+{{--                                <a href="{{ route("posts.restore", $post) }}" class="inline-block px-4 py-1 text-xs font-medium text-white bg-blue-600 rounded hover:bg-blue-700">Restore</a>--}}
+
+                                    <form action="{{  route("posts.restore", $post)  }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure to restore post {{$post->name}}?')">
+                                        @csrf
+                                        @method("PATCH")
+                                        <button type="submit" class="inline-block px-4 py-1 text-xs font-medium text-white bg-blue-600 rounded hover:bg-blue-700">Restore</button>
+                                    </form>
+                                @endif
+                                    <form action="{{ route('posts.destroy', $post) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure to delete post {{$post->name}}?')">
+                                    @csrf
+                                    @method("DELETE")
+                                    <button type="submit" class="inline-block px-4 py-1 text-xs font-medium text-white bg-red-600 rounded hover:bg-red-700">Delete</button>
+    {{--                            <a href="{{ route('posts.destroy', $post) }}" class="inline-block px-4 py-1 text-xs font-medium text-white bg-red-600 rounded hover:bg-red-700">Delete</a>--}}
+                                </form>
+
                             @endif
                         </td>
                     </tr>

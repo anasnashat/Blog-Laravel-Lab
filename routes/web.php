@@ -11,8 +11,7 @@ Route::redirect('/', '/posts');
 
 Route::resource('posts', PostController::class)->middleware('auth');
 Route::get('my-posts', [PostController::class, 'myPosts'])->name('posts.myPosts');
-Route::get('posts/restore/{post}', [PostController::class, 'restore'])->name('posts.restore');
-
+Route::patch('/posts/{post}/restore', [PostController::class, 'restore'])->name('posts.restore');
 
 /**
  * @return void

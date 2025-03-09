@@ -83,8 +83,10 @@ class PostController extends Controller
         $post->delete();
         return to_route('posts.index');
     }
-    public function restoreDeletedRow(Post $post): string
+    public function restore($post)
     {
+        $post = Post::withTrashed()->findOrFail($post);
+
         $post->restore();
         return to_route('posts.index');
     }
