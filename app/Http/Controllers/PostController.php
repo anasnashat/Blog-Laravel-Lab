@@ -48,6 +48,8 @@ class PostController extends Controller
     public function show(Post $post)
     {
 
+//        dd($post->comments[0]->user);
+
         return view('posts.show', compact('post'));
     }
 
@@ -56,6 +58,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+
         return view('posts.edit', compact('post'));
     }
 
