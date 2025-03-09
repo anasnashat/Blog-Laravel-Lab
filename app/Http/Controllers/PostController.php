@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -12,10 +13,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = [
-            ['id' => 1, 'title' => 'laravel', 'posted_by' => 'ahmed', 'created_at' => '2025-03-08 12:47:00'],
-            ['id' => 2, 'title' => 'HTML', 'posted_by' => 'mohamed', 'created_at' => '2025-04-10 11:00:00'],
-        ];
+        $posts = Post::withTrashed()->with('user')->paginate(5);
         return view('posts.index', compact('posts'));
     }
 
@@ -32,60 +30,68 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $post = [];
-        $post['title'] = $request->title;
-        $post['description'] = $request->description;
-        $post['posted_by'] = $request->posted_by;
-        var_dump($post);
+
+        $post = $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+        ]);
+        $post['user_id'] = auth()->id();
+        $post['slug'] = Str::slug($post['title']);
+//        var_dump($post);
+        Post::create($post);
         return to_route('posts.index');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $post)
+    public function show(Post $post)
     {
-        $post = [
-            'id' => 1,
-            'title' => 'laravel',
-            'description' => 'some description',
-            'posted_by' => [
-                'name' => 'ahmed',
-                'email' => 'test@gmail.com',
-                'created_at' => 'Thursday 25th of December 1975 02:15:16 PM'
-            ],
-            'created_at' => '2025-03-08 12:47:00',
-        ];        return view('posts.show', compact('post'));
+
+        return view('posts.show', compact('post'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Post $post)
     {
-        $post = ['id' => 1, 'description'=>'this is des', 'title' => 'laravel', 'posted_by' => 'ahmed', 'created_at' => '2025-03-08 12:47:00'];
-//        dd($post);
         return view('posts.edit', compact('post'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $post)
+    public function update(Request $request, Post $post)
     {
-        $post = [];
-        $post['title'] = $request->title;
-        $post['description'] = $request->description;
-        $post['posted_by'] = $request->posted_by;
-        var_dump($post);
+        $post_data = $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+        ]);
+
+        $post_data['user_id'] = auth()->id();
+        $post_data['slug'] = Str::slug($post_data['title']);
+        $post->update($post_data);
         return to_route('posts.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $post)
+    public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return to_route('posts.index');
+    }
+    public function restoreDeletedRow(Post $post): string
+    {
+        $post->restore();
+        return to_route('posts.index');
+    }
+
+    public function myPosts(): string
+    {
+        $posts = Post::where('user_id', auth()->id())->paginate(5);
+        return view('posts.index', compact('posts'));
     }
 }
