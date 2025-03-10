@@ -10,10 +10,16 @@ Route::redirect('/', '/posts');
 
 //Route::resource('posts', PostController::class)->middleware('auth')->except(['index', 'show']);
 
-Route::resource('posts', PostController::class)->middleware('auth');
-Route::get('my-posts', [PostController::class, 'myPosts'])->name('posts.myPosts');
-Route::patch('/posts/{post}/restore', [PostController::class, 'restore'])->name('posts.restore');
-Route::resource('comments', CommentController::class)->middleware('auth');
+
+Route::middleware('auth')->group(function () {
+    Route::resource('posts', PostController::class)->except('show','edit');
+    Route::get('posts/{post:slug}', [PostController::class, 'show'])->name('posts.show');
+    Route::get('posts/{post:slug}/edit', [PostController::class, 'edit'])->name('posts.edit');
+    Route::get('my-posts', [PostController::class, 'myPosts'])->name('posts.myPosts');
+    Route::patch('/posts/{post}/restore', [PostController::class, 'restore'])->name('posts.restore');
+    Route::resource('comments', CommentController::class);
+});
+
 // Route::get('api/posts/{id}', [PostController::class, 'showApi']);
 
 /**
