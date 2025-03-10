@@ -32,14 +32,14 @@ class PostController extends Controller
     {
 
         $post = $request->validate([
-            'title' => 'required',
+            'title' => ['required', 'min:10'],
             'description' => 'required',
         ]);
         $post['user_id'] = auth()->id();
         $post['slug'] = Str::slug($post['title']);
 //        var_dump($post);
         Post::create($post);
-        return to_route('posts.index');
+        return to_route('posts.index')->with('success','Post created successfully');
     }
 
     /**
