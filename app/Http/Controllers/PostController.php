@@ -59,7 +59,7 @@ class PostController extends Controller
     public function edit(Post $post)
     {
 
-        return view('posts.edit', compact('post'));
+        return view('posts.create', compact('post'));
     }
 
     /**
@@ -98,5 +98,11 @@ class PostController extends Controller
     {
         $posts = Post::where('user_id', auth()->id())->paginate(5);
         return view('posts.index', compact('posts'));
+    }
+
+    public function showApi($id)
+    {
+        $post = Post::with('user')->findOrFail($id);
+        return response()->json($post);
     }
 }
