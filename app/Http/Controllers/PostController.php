@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -28,15 +30,18 @@ class PostController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
+//        dd($request);
 
-        $post = $request->validate([
-            'title' => ['required', 'min:10'],
-            'description' => 'required',
-        ]);
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('posts', 'public'); // Store in storage/app/public/posts
+        }
+
+        $post = $request->all();
         $post['user_id'] = auth()->id();
-        $post['slug'] = Str::slug($post['title']);
+        $post['image'] = $imagePath ?? null;
+
 //        var_dump($post);
         Post::create($post);
         return to_route('posts.index')->with('success','Post created successfully');
@@ -65,15 +70,20 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(PostRequest $request, Post $post)
     {
-        $post_data = $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-        ]);
+//        dd($request);
 
-        $post_data['user_id'] = auth()->id();
-        $post_data['slug'] = Str::slug($post_data['title']);
+        if ($request->hasFile('image')) {
+            if ($post->image) {
+                Storage::disk('public')->delete($post->image);
+            }
+            $imagePath = $request->file('image')->store('posts', 'public');
+        } else {
+            $imagePath = $post->image;
+        }
+        $post_data = $request->all();
+        $post_data['image'] = $imagePath;
         $post->update($post_data);
         return to_route('posts.index');
     }
