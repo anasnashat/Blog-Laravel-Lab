@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,13 +15,23 @@ class Post extends Model
 {
     use SoftDeletes;
     use HasFactory;
-    protected $fillable = ['title', 'slug', 'description', 'user_id'];
+    use Sluggable;
+
+    protected $fillable = ['title', 'slug', 'description', 'image', 'user_id'];
 
 //    public function getRouteKey()
 //    {
 //        return $this->slug;
 //    }
-
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'title',
+                'unique' => true
+            ]
+        ];
+    }
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
