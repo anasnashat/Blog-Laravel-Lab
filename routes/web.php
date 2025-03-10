@@ -14,7 +14,7 @@ Route::resource('posts', PostController::class)->middleware('auth');
 Route::get('my-posts', [PostController::class, 'myPosts'])->name('posts.myPosts');
 Route::patch('/posts/{post}/restore', [PostController::class, 'restore'])->name('posts.restore');
 Route::resource('comments', CommentController::class)->middleware('auth');
-Route::get('api/posts/{id}', [PostController::class, 'showApi']);
+// Route::get('api/posts/{id}', [PostController::class, 'showApi']);
 
 /**
  * @return void
