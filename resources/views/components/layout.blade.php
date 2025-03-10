@@ -19,15 +19,15 @@
                         </a>
                     </div>
                     <div class="hidden md:flex items-center space-x-8 ml-10">
-                        <a class="px-3 py-2 text-sm font-medium rounded-md transition {{ request()->routeIs('posts.index') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}" 
+                        <a class="px-3 py-2 text-sm font-medium rounded-md transition {{ request()->routeIs('posts.index') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}"
                            href="{{ route('posts.index') }}">All Posts</a>
-                        <a class="px-3 py-2 text-sm font-medium rounded-md transition {{ request()->routeIs('posts.myPosts') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}" 
+                        <a class="px-3 py-2 text-sm font-medium rounded-md transition {{ request()->routeIs('posts.myPosts') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}"
                            href="{{ route('posts.myPosts') }}">My Posts</a>
-                        <a class="px-3 py-2 text-sm font-medium rounded-md transition {{ request()->routeIs('posts.dashboard') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}" 
+                        <a class="px-3 py-2 text-sm font-medium rounded-md transition {{ request()->routeIs('posts.dashboard') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}"
                            href="{{ route('dashboard') }}">Dashboard</a>
                     </div>
                 </div>
-                
+
                 <!-- Mobile menu button -->
                 <div class="flex items-center md:hidden">
                     <button type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
@@ -42,6 +42,26 @@
 
     <!-- Main Content -->
     <div id="app" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div id="alert-container" class="fixed top-6 right-6 z-50 flex flex-col gap-3">
+            @if (session()->has('success'))
+                <x-alert 
+                    type="success" 
+                    :message="session('success')" 
+                    :desc="session('success_description')" 
+                />
+            @endif
+
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                    <x-alert 
+                        type="error" 
+                        message="Error" 
+                        :desc="$error" 
+                    />
+                @endforeach
+            @endif
+        </div>
+
         {{ $slot }}
     </div>
 
