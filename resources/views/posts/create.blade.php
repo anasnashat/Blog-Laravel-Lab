@@ -16,13 +16,17 @@
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
             <form action="{{ isset($post) ? route('posts.update', $post->id) : route('posts.store') }}"
                   method="POST"
-                  class="space-y-6 p-6">
+                  class="space-y-6 p-6"
+                  enctype="multipart/form-data" 
+
+            >
                 @csrf
                 @if(isset($post))
                     @method('PUT')
                 @endif
 
                 <!-- Title Input -->
+
                 <div>
                     <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
                     <input type="text"
@@ -49,6 +53,48 @@
                     @error('description')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
+                </div>
+
+                <div>
+                    <label for="image" class="block text-sm font-medium text-gray-700 mb-2">Post Image</label>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex-shrink-0">
+                            <div class="h-32 w-32 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
+                                <img id="preview" 
+                                     src="{{ isset($post) && $post->image ? asset('storage/' . $post->image) : '#' }}"
+                                     alt="Preview" 
+                                     class="h-full w-full object-cover rounded-lg {{ isset($post) && $post->image ? '' : 'hidden' }}">
+                                <div id="placeholder" class="text-center p-4 {{ isset($post) && $post->image ? 'hidden' : '' }}">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    <p class="mt-1 text-xs text-gray-500">Upload Image</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <input type="file"
+                                   name="image"
+                                   id="image"
+                                   onchange="previewImage(this)"
+                                   class="hidden"
+                                   accept="image/*">
+                            <label for="image" 
+                                   class="cursor-pointer inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:text-gray-500 hover:border-gray-400 focus:outline-none focus:border-blue-300 focus:ring focus:ring-blue-200 active:text-gray-800 active:bg-gray-50 disabled:opacity-25 transition">
+                                Choose Image
+                            </label>
+                            @if(isset($post) && $post->image)
+                                <button type="button" 
+                                        onclick="removeImage()"
+                                        class="ml-2 inline-flex items-center px-4 py-2 bg-red-100 border border-transparent rounded-md font-semibold text-xs text-red-700 uppercase tracking-widest hover:bg-red-200 focus:outline-none focus:border-red-500 focus:ring focus:ring-red-200 active:bg-red-300 disabled:opacity-25 transition">
+                                    Remove
+                                </button>
+                            @endif
+                            @error('image')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Form Actions -->

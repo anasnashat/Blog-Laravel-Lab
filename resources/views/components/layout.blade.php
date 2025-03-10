@@ -41,22 +41,22 @@
     </nav>
 
     <!-- Main Content -->
-    <div id="app" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div id="app" class="max-w-7xl  mx-auto px-4 sm:px-6 lg:px-8 py-5">
         <div id="alert-container" class="fixed top-6 right-6 z-50 flex flex-col gap-3">
             @if (session()->has('success'))
-                <x-alert 
-                    type="success" 
-                    :message="session('success')" 
-                    :desc="session('success_description')" 
+                <x-alert
+                    type="success"
+                    :message="session('success')"
+                    :desc="session('success_description')"
                 />
             @endif
 
             @if ($errors->any())
                 @foreach ($errors->all() as $error)
-                    <x-alert 
-                        type="error" 
-                        message="Error" 
-                        :desc="$error" 
+                    <x-alert
+                        type="error"
+                        message="Error"
+                        :desc="$error"
                     />
                 @endforeach
             @endif
