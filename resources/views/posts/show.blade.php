@@ -36,19 +36,37 @@
                 <div class="px-4 py-4 space-y-4">
                     <!-- Display Comments -->
                     @foreach($post->comments as $comment)
-                        <div class="border-b border-gray-200 pb-3">
-                            <div class="flex items-center">
-                                <div class="bg-gray-300 w-10 h-10 rounded-full flex items-center justify-center text-gray-800 font-semibold">
-                                    {{ substr($comment->user->name, 0, 1) }}
-                                </div>
-                                <div class="ml-3">
-                                    <h4 class="font-semibold text-gray-900">{{ $comment->user->name }}</h4>
-                                    <p class="text-sm text-gray-500">{{ $comment->created_at->diffForHumans() }}</p>
-                                </div>
-                            </div>
-                            <p class="text-gray-700 mt-2">{{ $comment->content }}</p>
+                        <div class="bg-gray-100 p-4 rounded mb-4">
+                            <p class="text-gray-800">{{ $comment->content }}</p>
+                            <p class="text-sm text-gray-600">By: {{ $comment->user->name }}</p>
+
+                            @if(auth()->id() === $comment->user_id)
+                            <button onclick="showEditForm({{ $comment->id }})"
+                                    class="text-blue-600 hover:underline">
+                                Edit
+                            </button>
+
+                            <form id="edit-form-{{ $comment->id }}"
+                                  action="{{ route('comments.update', $comment) }}"
+                                  method="POST"
+                                  class="hidden">
+                                @csrf
+                                @method('PATCH')
+
+                                <textarea name="content" class="w-full border rounded p-2">{{ $comment->content }}</textarea>
+                                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded mt-2">
+                                    Save
+                                </button>
+                            </form>
+                            @endif
                         </div>
                     @endforeach
+
+                    <script>
+                        function showEditForm(commentId) {
+                            document.getElementById('edit-form-' + commentId).classList.toggle('hidden');
+                        }
+                    </script>
 
                     <!-- Comment Form -->
                     @auth
